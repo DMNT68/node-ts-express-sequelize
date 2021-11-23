@@ -2,7 +2,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express, { Application } from 'express';
 import cors from 'cors';
+
 import userRoutes from '../routes/usuario';
+import authRoutes from '../routes/auth';
 import db from '../db/connection';
 
 class Server {
@@ -10,6 +12,7 @@ class Server {
   private port: string;
   private apiPaths = {
     usuarios: '/api/usuarios',
+    authPath: '/api/auth',
   };
 
   constructor() {
@@ -22,11 +25,11 @@ class Server {
     this.routes();
   }
 
-  async dbConnection (){
+  async dbConnection() {
     try {
       await db.authenticate();
-      
-      console.log('DataBase online')
+
+      console.log('DataBase online');
     } catch (error) {
       throw new Error();
     }
@@ -45,6 +48,7 @@ class Server {
 
   routes() {
     this.app.use(this.apiPaths.usuarios, userRoutes);
+    this.app.use(this.apiPaths.authPath, authRoutes);
   }
 
   listen() {

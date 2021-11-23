@@ -8,6 +8,9 @@ const Usuario = db.define('Usuario', {
   email: {
     type: DataTypes.STRING,
   },
+  password: {
+    type: DataTypes.STRING,
+  },
   estado: {
     type: DataTypes.BOOLEAN,
   },

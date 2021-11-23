@@ -1,25 +1,28 @@
 import { Request, Response } from 'express';
 import Usuario from '../models/usuario';
-import { Sequelize } from 'sequelize';
 import db from '../db/connection';
-
+import { encriptarPassword } from '../helpers/encriptarPassword';
+import { usuarioActivoToken } from '../helpers/db-validators';
 
 export const getUsuariosActivos = async (req: Request, res: Response) => {
   try {
     // const usuarios = await Usuario.findAll();
-    const usuarios = await db.query('CALL obtenerUsuarios(:estado)', { replacements: { estado: 1 } });
+    // const usuarios = await db.query('CALL obtenerUsuarios(:estado)', { replacements: { estado: 1 } });
+    const usuarios = await db.query('CALL obtenerUsuarios()');
 
     res.status(200).json({
       ok: true,
-      usuarios
+      usuarios,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       ok: false,
       msg: `Ha ocurrido un error vuelva a intentarlo`,
     });
   }
 };
+
 export const getUsuarios = async (req: Request, res: Response) => {
   try {
     const usuarios = await Usuario.findAll();
@@ -57,21 +60,11 @@ export const getUsuario = async (req: Request, res: Response) => {
 };
 
 export const postUsuario = async (req: Request, res: Response) => {
-  const { body } = req;
+  const { nombre, email, password } = req.body;
 
   try {
-    const existeEmail = await Usuario.findOne({
-      where: { email: body.email },
-    });
+    const usuario = Usuario.build({ nombre, email, password: encriptarPassword(password) });
 
-    if (existeEmail) {
-      return res.status(400).json({
-        ok: false,
-        msg: `Ya existe un usuario con el email ${body.email}`,
-      });
-    }
-
-    const usuario = Usuario.build(body);
     await usuario.save();
 
     res.status(200).json({
@@ -80,6 +73,7 @@ export const postUsuario = async (req: Request, res: Response) => {
       usuario,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       ok: false,
       msg: `Ha ocurrido un error vuelva a intentarlo`,
@@ -117,17 +111,13 @@ export const putUsuario = async (req: Request, res: Response) => {
 
 export const deleteUsuario = async (req: Request, res: Response) => {
   const { id } = req.params;
+  console.log(id);
   try {
+    const usuarioActivo = await usuarioActivoToken(req.userId);
+    
     const usuario = await Usuario.findByPk(id);
 
-    if (!usuario) {
-      return res.status(400).json({
-        ok: false,
-        msg: `No existe un usuarios con el id ${id}`,
-      });
-    }
-
-    await usuario.update({ estado: false });
+    // await usuario.update({ estado: false });
 
     res.status(200).json({
       ok: true,
