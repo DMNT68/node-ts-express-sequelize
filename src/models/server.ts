@@ -31,6 +31,7 @@ class Server {
 
       console.log('DataBase online');
     } catch (error) {
+      console.log('---->', error);
       throw new Error();
     }
   }

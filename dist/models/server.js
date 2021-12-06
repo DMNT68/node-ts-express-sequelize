@@ -73,6 +73,7 @@ var Server = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         error_1 = _a.sent();
+                        console.log('---->', error_1);
                         throw new Error();
                     case 3: return [2 /*return*/];
                 }
