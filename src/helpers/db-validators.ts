@@ -1,7 +1,9 @@
-import Usuario from '../models/usuario';
+import { NextFunction, Request, Response } from 'express';
+import { Role } from '../models/role';
+import User from '../models/user';
 
 export const emailExiste = async (email: string = '') => {
-  const existeEmail = await Usuario.findOne({
+  const existeEmail = await User.findOne({
     where: { email: email },
   });
 
@@ -11,8 +13,8 @@ export const emailExiste = async (email: string = '') => {
 };
 
 export const existeUsuarioPorId = async (id: number) => {
-  const existeUsuario = await Usuario.findOne({
-    where: { id: id },
+  const existeUsuario = await User.findOne({
+    where: { users_id: id, deteled_at: null },
   });
 
   if (!existeUsuario) {
@@ -20,12 +22,9 @@ export const existeUsuarioPorId = async (id: number) => {
   }
 };
 
-export const usuarioActivoToken = async (id: number) => {
-  const usuarioActivo = await Usuario.findOne({
-    where: { id: id, estado: 0 },
-  });
-
-  if (!usuarioActivo) {
-    throw new Error(`El usuario no tiene permisos para hacer esta accion`);
+export const esRolValido = async (rol: number) => {
+  const existeRol = await Role.findOne({ where: { role_id: rol, deleted_at: null } });
+  if (!existeRol) {
+    throw new Error(`El rol no existe`);
   }
 };

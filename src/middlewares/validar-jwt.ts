@@ -29,7 +29,7 @@ export const validarJWT = (req: Request, res: Response, next: NextFunction) => {
     console.log(error);
     res.status(401).json({
       ok: false,
-      msg: `Acceso denegado, Token no válido`,
+      msg: 'Acceso denegado, Token no válido',
     });
   }
 };

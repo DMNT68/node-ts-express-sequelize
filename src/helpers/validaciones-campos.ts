@@ -2,6 +2,7 @@ import { check } from 'express-validator';
 import { validarCampos } from '../middlewares/validar-campos';
 import { emailExiste, existeUsuarioPorId } from './db-validators';
 import { validarJWT } from '../middlewares/validar-jwt';
+import { validarAutorizacionAdmin } from '../middlewares/validarAutorizacion';
 
 export const validarUsuario = [
   check('nombre', 'El nombre tinene caracteres invalidos, solo letras').matches(/^[a-zA-Z\s]+$/i),
@@ -26,5 +27,6 @@ export const validarDeleteUsuario = [
   check('id', 'No existe un id').not().isEmpty(),
   check('id').custom(existeUsuarioPorId),
   validarJWT,
+  validarAutorizacionAdmin,
   validarCampos,
 ];
