@@ -40,7 +40,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUsuario = exports.putUsuario = exports.postUsuario = exports.getUsuario = exports.getUsuarios = exports.getUsuariosActivos = void 0;
-var usuario_1 = __importDefault(require("../models/usuario"));
 var connection_1 = __importDefault(require("../db/connection"));
 var encriptarPassword_1 = require("../helpers/encriptarPassword");
 var user_1 = __importDefault(require("../models/user"));
@@ -53,7 +52,7 @@ var getUsuariosActivos = function (req, res) { return __awaiter(void 0, void 0, 
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, connection_1.default.query('CALL obtenerUsuarios()')];
+                return [4 /*yield*/, connection_1.default.query('CALL getUsers()')];
             case 1:
                 usuarios = _a.sent();
                 res.status(200).json({
@@ -83,6 +82,7 @@ var getUsuarios = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 return [4 /*yield*/, user_1.default.findAll({
                         where: { deteled_at: null },
                         include: [role_1.Role, institution_1.Institution, location_1.Location],
+                        attributes: ['users_id', 'user_name', 'name', 'lastname', 'phone', 'email'],
                     })];
             case 1:
                 usuarios = _a.sent();
@@ -113,7 +113,12 @@ var getUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, usuario_1.default.findByPk(id)];
+                return [4 /*yield*/, user_1.default.findOne({
+                        where: { users_id: id, deteled_at: null },
+                        include: [role_1.Role, institution_1.Institution, location_1.Location],
+                        attributes: ['users_id', 'user_name', 'name', 'lastname', 'phone', 'email', 'birth'],
+                        limit: 1,
+                    })];
             case 2:
                 usuario = _a.sent();
                 if (usuario) {
@@ -127,6 +132,7 @@ var getUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [3 /*break*/, 4];
             case 3:
                 error_3 = _a.sent();
+                console.log('--->', error_3);
                 res.status(500).json({
                     ok: false,
                     msg: "Ha ocurrido un error vuelva a intentarlo",
@@ -138,15 +144,15 @@ var getUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, 
 }); };
 exports.getUsuario = getUsuario;
 var postUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, nombre, email, password, usuario, error_4;
+    var _a, email, password, user_name, name, lastname, phone, birth, idInstitution, idLocation, usuario, error_4;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = req.body, nombre = _a.nombre, email = _a.email, password = _a.password;
+                _a = req.body, email = _a.email, password = _a.password, user_name = _a.user_name, name = _a.name, lastname = _a.lastname, phone = _a.phone, birth = _a.birth, idInstitution = _a.idInstitution, idLocation = _a.idLocation;
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                usuario = usuario_1.default.build({ nombre: nombre, email: email, password: (0, encriptarPassword_1.encriptarPassword)(password) });
+                usuario = user_1.default.build({ user_name: user_name, password: (0, encriptarPassword_1.encriptarPassword)(password), name: name, lastname: lastname, email: email, phone: phone, birth: birth, idInstitution: idInstitution, idLocation: idLocation });
                 return [4 /*yield*/, usuario.save()];
             case 2:
                 _b.sent();
@@ -179,7 +185,7 @@ var putUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, , 5]);
-                return [4 /*yield*/, usuario_1.default.findByPk(id)];
+                return [4 /*yield*/, user_1.default.findByPk(id)];
             case 2:
                 usuario = _a.sent();
                 if (!usuario) {

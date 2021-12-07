@@ -11,7 +11,7 @@ export const getUsuariosActivos = async (req: Request, res: Response) => {
   try {
     // const usuarios = await Usuario.findAll();
     // const usuarios = await db.query('CALL obtenerUsuarios(:estado)', { replacements: { estado: 1 } });
-    const usuarios = await db.query('CALL obtenerUsuarios()');
+    const usuarios = await db.query('CALL getUsers()');
 
     res.status(200).json({
       ok: true,
@@ -31,6 +31,7 @@ export const getUsuarios = async (req: Request, res: Response) => {
     const usuarios = await User.findAll({
       where: { deteled_at: null },
       include: [Role, Institution, Location],
+      attributes: ['users_id', 'user_name', 'name', 'lastname', 'phone', 'email'],
     });
 
     res.status(200).json({
@@ -50,7 +51,12 @@ export const getUsuario = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const usuario = await Usuario.findByPk(id);
+    const usuario = await User.findOne({
+      where: { users_id: id, deteled_at: null },
+      include: [Role, Institution, Location],
+      attributes: ['users_id', 'user_name', 'name', 'lastname', 'phone', 'email', 'birth'],
+      limit: 1,
+    });
 
     if (usuario) {
       res.status(200).json({ ok: true, usuario });
@@ -60,6 +66,7 @@ export const getUsuario = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
+    console.log('--->', error);
     res.status(500).json({
       ok: false,
       msg: `Ha ocurrido un error vuelva a intentarlo`,
@@ -68,10 +75,10 @@ export const getUsuario = async (req: Request, res: Response) => {
 };
 
 export const postUsuario = async (req: Request, res: Response) => {
-  const { nombre, email, password } = req.body;
+  const { email, password, user_name, name, lastname, phone, birth, idInstitution, idLocation } = req.body;
 
   try {
-    const usuario = Usuario.build({ nombre, email, password: encriptarPassword(password) });
+    const usuario = User.build({ user_name, password: encriptarPassword(password), name, lastname, email, phone, birth, idInstitution, idLocation});
 
     await usuario.save();
 
@@ -93,7 +100,7 @@ export const putUsuario = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { body } = req;
   try {
-    const usuario = await Usuario.findByPk(id);
+    const usuario = await User.findByPk(id);
 
     if (!usuario) {
       return res.status(400).json({
