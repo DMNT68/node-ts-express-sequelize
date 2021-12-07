@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 
 const db = new Sequelize(
-  'desarrollo_ecosRed', 
+  'fcpcutnc_ecosred', // fcpcutnc_ecosred
   'fcpcutnc_Atest', // fcpcutnc_Atest  root
   'sw0ufsUTs=Nc' // sw0ufsUTs=Nc  @Mysql>1993<
   , { 
