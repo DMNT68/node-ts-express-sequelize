@@ -5,15 +5,14 @@ import cors from 'cors';
 
 import userRoutes from '../routes/usuario';
 import authRoutes from '../routes/auth';
+import catalogsRoutes from '../routes/catalogs';
 import db from '../db/connection';
+import { apiPaths } from '../utils/apiPaths';
 
 class Server {
   private app: Application;
   private port: string;
-  private apiPaths = {
-    usuarios: '/api/usuarios',
-    authPath: '/api/auth',
-  };
+  private apiPaths = apiPaths;
 
   constructor() {
     this.app = express();
@@ -50,6 +49,7 @@ class Server {
   routes() {
     this.app.use(this.apiPaths.usuarios, userRoutes);
     this.app.use(this.apiPaths.authPath, authRoutes);
+    this.app.use(this.apiPaths.catalogs, catalogsRoutes);
   }
 
   listen() {

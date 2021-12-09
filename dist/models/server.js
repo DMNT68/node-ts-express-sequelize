@@ -45,13 +45,12 @@ var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
 var usuario_1 = __importDefault(require("../routes/usuario"));
 var auth_1 = __importDefault(require("../routes/auth"));
+var catalogs_1 = __importDefault(require("../routes/catalogs"));
 var connection_1 = __importDefault(require("../db/connection"));
+var apiPaths_1 = require("../utils/apiPaths");
 var Server = /** @class */ (function () {
     function Server() {
-        this.apiPaths = {
-            usuarios: '/api/usuarios',
-            authPath: '/api/auth',
-        };
+        this.apiPaths = apiPaths_1.apiPaths;
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '8000';
         // Métodos iniciales
@@ -91,6 +90,7 @@ var Server = /** @class */ (function () {
     Server.prototype.routes = function () {
         this.app.use(this.apiPaths.usuarios, usuario_1.default);
         this.app.use(this.apiPaths.authPath, auth_1.default);
+        this.app.use(this.apiPaths.catalogs, catalogs_1.default);
     };
     Server.prototype.listen = function () {
         var _this = this;

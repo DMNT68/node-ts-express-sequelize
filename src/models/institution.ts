@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import db from '../db/connection';
+import { Location } from './location';
 
 export const Institution = db.define('institutions', {
   institution_id: { type: DataTypes.NUMBER, primaryKey: true },
@@ -8,6 +9,8 @@ export const Institution = db.define('institutions', {
   idLocation: { type: DataTypes.NUMBER },
 });
 
+Institution.belongsTo(Location, {foreignKey:'idLocation'})
+Location.hasMany(Institution, { foreignKey: 'idLocation' });
 /* 
 institution_id int AI PK 
 name varchar(255) 

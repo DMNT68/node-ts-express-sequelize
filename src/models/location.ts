@@ -8,6 +8,9 @@ export const Location = db.define('provincias_cantones_parroquias_ec', {
   id_parent: { type: DataTypes.STRING },
 }, {freezeTableName: true,});
 
+Location.belongsTo(Location, {foreignKey:'id_parent'})
+Location.hasMany(Location, { foreignKey: 'id_parent' });
+
 /* 
 id int AI PK 
 name varchar(100) 

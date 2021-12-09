@@ -1,8 +1,6 @@
 import { Router } from 'express';
-import { check } from 'express-validator';
 import { getUsuarios, getUsuario, postUsuario, putUsuario, deleteUsuario, getUsuariosActivos } from '../controller/usuarios';
 import { validarDeleteUsuario, validarUsuario, validarUsuarioPut } from '../helpers/validaciones-campos';
-import { validarCampos } from '../middlewares/validar-campos';
 import { validarJWT } from '../middlewares/validar-jwt';
 
 const router = Router();
