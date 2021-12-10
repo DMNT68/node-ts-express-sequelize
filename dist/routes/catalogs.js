@@ -10,5 +10,8 @@ router.get('/institutions', [validar_jwt_1.validarJWT], catalogs_1.getinstitutio
 router.get('/provincias', [validar_jwt_1.validarJWT], catalogs_1.getProvincias);
 router.get('/cantonesByProvincia', [validar_jwt_1.validarJWT], catalogs_1.getCantonesByProvincia);
 router.get('/parroquiasByCanton', [validar_jwt_1.validarJWT], catalogs_1.getParroquiasByCanton);
+router.get('/catalogByliteral', [validar_jwt_1.validarJWT], catalogs_1.getCatalogByliteral);
+router.get('/literalesLotaip', [validar_jwt_1.validarJWT], catalogs_1.getLiteralesLotaip);
+router.get('/catalogLotaip', [validar_jwt_1.validarJWT], catalogs_1.getCatalogLotaip);
 exports.default = router;
 //# sourceMappingURL=catalogs.js.map

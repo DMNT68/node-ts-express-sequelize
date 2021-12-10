@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,11 +47,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getParroquiasByCanton = exports.getCantonesByProvincia = exports.getProvincias = exports.getinstitutions = exports.getRoles = void 0;
+exports.getCatalogLotaip = exports.getLiteralesLotaip = exports.getCatalogByliteral = exports.getParroquiasByCanton = exports.getCantonesByProvincia = exports.getProvincias = exports.getinstitutions = exports.getRoles = void 0;
 var role_1 = require("../models/role");
 var institution_1 = require("../models/institution");
 var location_1 = require("../models/location");
 var sequelize_1 = require("sequelize");
+var catalogLiteral_1 = require("../models/catalogLiteral");
+var catalogLotaip_1 = require("../models/catalogLotaip");
 var getRoles = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var roles, error_1;
     return __generator(this, function (_a) {
@@ -232,4 +245,128 @@ var getParroquiasByCanton = function (req, res) { return __awaiter(void 0, void 
     });
 }); };
 exports.getParroquiasByCanton = getParroquiasByCanton;
+var getCatalogByliteral = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var idCatalog, literal, catalogs, error_6;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                idCatalog = req.body.idCatalog;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, catalogLotaip_1.CatalogLotaip.findOne({ where: { deleted_at: null, catalogLotaip_id: idCatalog } })];
+            case 2:
+                literal = _a.sent();
+                if (!literal) {
+                    return [2 /*return*/, res.status(404).json({
+                            ok: false,
+                            msg: 'No existe ese catalogo',
+                        })];
+                }
+                return [4 /*yield*/, catalogLiteral_1.CatalogLiteral.findAll({ where: { deleted_at: null, idCatalog: idCatalog }, include: [catalogLotaip_1.CatalogLotaip] })];
+            case 3:
+                catalogs = _a.sent();
+                if (!catalogs || catalogs.length <= 0) {
+                    return [2 /*return*/, res.status(404).json({
+                            ok: false,
+                            msg: 'No se encontro resultados',
+                        })];
+                }
+                res.status(200).json({
+                    ok: true,
+                    catalogs: catalogs,
+                });
+                return [3 /*break*/, 5];
+            case 4:
+                error_6 = _a.sent();
+                console.log('---->', error_6);
+                res.status(500).json({
+                    ok: false,
+                    msg: "Ha ocurrido un error vuelva a intentarlo",
+                });
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getCatalogByliteral = getCatalogByliteral;
+var getLiteralesLotaip = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var catalogLotaip, error_7;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, catalogLotaip_1.CatalogLotaip.findAll({ where: { deleted_at: null } })];
+            case 1:
+                catalogLotaip = _a.sent();
+                if (!catalogLotaip || catalogLotaip.length <= 0) {
+                    return [2 /*return*/, res.status(404).json({
+                            ok: false,
+                            msg: 'No se encontro resultados',
+                        })];
+                }
+                res.status(200).json({
+                    ok: true,
+                    catalogLotaip: catalogLotaip,
+                });
+                return [3 /*break*/, 3];
+            case 2:
+                error_7 = _a.sent();
+                console.log('---->', error_7);
+                res.status(500).json({
+                    ok: false,
+                    msg: "Ha ocurrido un error vuelva a intentarlo",
+                });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getLiteralesLotaip = getLiteralesLotaip;
+var getCatalogLotaip = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var catalogLotaip, data, error_8;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                return [4 /*yield*/, catalogLotaip_1.CatalogLotaip.findAll({ where: { deleted_at: null } })];
+            case 1:
+                catalogLotaip = _a.sent();
+                if (!catalogLotaip || catalogLotaip.length <= 0) {
+                    return [2 /*return*/, res.status(404).json({
+                            ok: false,
+                            msg: 'No se encontro resultados',
+                        })];
+                }
+                return [4 /*yield*/, Promise.all(catalogLotaip.map(function (item) { return __awaiter(void 0, void 0, void 0, function () {
+                        var catalog;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, catalogLiteral_1.CatalogLiteral.findAll({ raw: true, where: { deleted_at: null, idCatalog: item.getDataValue('catalogLotaip_id') }, attributes: ['catalogLiteral_id', 'title'] })];
+                                case 1:
+                                    catalog = _a.sent();
+                                    return [2 /*return*/, __assign(__assign({}, item.get({ plain: true })), { puntos: catalog })];
+                            }
+                        });
+                    }); }))];
+            case 2:
+                data = _a.sent();
+                res.status(200).json({
+                    ok: true,
+                    data: data,
+                });
+                return [3 /*break*/, 4];
+            case 3:
+                error_8 = _a.sent();
+                console.log('---->', error_8);
+                res.status(500).json({
+                    ok: false,
+                    msg: "Ha ocurrido un error vuelva a intentarlo",
+                });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getCatalogLotaip = getCatalogLotaip;
 //# sourceMappingURL=catalogs.js.map

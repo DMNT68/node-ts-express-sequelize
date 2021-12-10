@@ -1,14 +1,18 @@
 import { DataTypes } from 'sequelize';
 import db from '../db/connection';
 
-export const Location = db.define('provincias_cantones_parroquias_ec', {
-  id: { type: DataTypes.NUMBER, primaryKey: true },
-  name: { type: DataTypes.STRING },
-  code: { type: DataTypes.STRING },
-  id_parent: { type: DataTypes.STRING },
-}, {freezeTableName: true,});
+export const Location = db.define(
+  'provincias_cantones_parroquias_ec',
+  {
+    id: { type: DataTypes.NUMBER, primaryKey: true },
+    name: { type: DataTypes.STRING },
+    code: { type: DataTypes.STRING },
+    id_parent: { type: DataTypes.STRING },
+  },
+  { freezeTableName: true }
+);
 
-Location.belongsTo(Location, {foreignKey:'id_parent'})
+Location.belongsTo(Location, { foreignKey: 'id_parent' });
 Location.hasMany(Location, { foreignKey: 'id_parent' });
 
 /* 

@@ -11,7 +11,7 @@ exports.Location = connection_1.default.define('provincias_cantones_parroquias_e
     name: { type: sequelize_1.DataTypes.STRING },
     code: { type: sequelize_1.DataTypes.STRING },
     id_parent: { type: sequelize_1.DataTypes.STRING },
-}, { freezeTableName: true, });
+}, { freezeTableName: true });
 exports.Location.belongsTo(exports.Location, { foreignKey: 'id_parent' });
 exports.Location.hasMany(exports.Location, { foreignKey: 'id_parent' });
 /*
