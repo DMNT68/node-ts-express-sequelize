@@ -1,1 +1,1 @@
-{"version":3,"file":"apiPaths.js","sourceRoot":"","sources":["../../src/utils/apiPaths.ts"],"names":[],"mappings":";;;AAAa,QAAA,QAAQ,GAAG;IACtB,QAAQ,EAAE,eAAe;IACzB,QAAQ,EAAE,WAAW;IACrB,QAAQ,EAAE,eAAe;CAC1B,CAAC"}
+{"version":3,"file":"apiPaths.js","sourceRoot":"","sources":["../../src/utils/apiPaths.ts"],"names":[],"mappings":";;;AAAa,QAAA,QAAQ,GAAG;IACtB,QAAQ,EAAE,eAAe;IACzB,QAAQ,EAAE,WAAW;IACrB,QAAQ,EAAE,eAAe;IACzB,MAAM,EAAE,aAAa;CACtB,CAAC"}

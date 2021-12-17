@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.esRolValido = exports.existeUsuarioPorId = exports.emailExiste = void 0;
+exports.esRolValido = exports.existeUsuarioPorId = exports.existeUserName = exports.existePhone = exports.emailExiste = void 0;
 var role_1 = require("../models/role");
 var user_1 = __importDefault(require("../models/user"));
 var emailExiste = function (email) {
@@ -62,17 +62,57 @@ var emailExiste = function (email) {
     });
 };
 exports.emailExiste = emailExiste;
+var existePhone = function (phone) {
+    if (phone === void 0) { phone = ''; }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var existePhone;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, user_1.default.findOne({
+                        where: { phone: phone },
+                    })];
+                case 1:
+                    existePhone = _a.sent();
+                    if (existePhone) {
+                        throw new Error("El numero celular: " + phone + " ya esta registrado");
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.existePhone = existePhone;
+var existeUserName = function (userName) {
+    if (userName === void 0) { userName = ''; }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var existeUserName;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, user_1.default.findOne({
+                        where: { user_name: userName },
+                    })];
+                case 1:
+                    existeUserName = _a.sent();
+                    if (existeUserName) {
+                        throw new Error("El nombre de usuario: " + existeUserName + " ya esta registrado");
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.existeUserName = existeUserName;
 var existeUsuarioPorId = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     var existeUsuario;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, user_1.default.findOne({
-                    where: { users_id: id, deteled_at: null },
+                    where: { users_id: id, deleted_at: null },
                 })];
             case 1:
                 existeUsuario = _a.sent();
                 if (!existeUsuario) {
-                    throw new Error("El usuarios no existe con este id: " + id);
+                    throw new Error("El usuario no existe con este id: " + id);
                 }
                 return [2 /*return*/];
         }
@@ -83,7 +123,7 @@ var esRolValido = function (rol) { return __awaiter(void 0, void 0, void 0, func
     var existeRol;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, role_1.Role.findOne({ where: { role_id: rol, deleted_at: null } })];
+            case 0: return [4 /*yield*/, role_1.Role.findOne({ where: { roles_id: rol, deleted_at: null } })];
             case 1:
                 existeRol = _a.sent();
                 if (!existeRol) {

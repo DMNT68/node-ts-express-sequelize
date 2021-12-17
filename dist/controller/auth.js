@@ -56,7 +56,7 @@ var login = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
             case 1:
                 _b.trys.push([1, 4, , 5]);
                 return [4 /*yield*/, user_1.default.findOne({
-                        where: { email: email, deteled_at: null },
+                        where: { email: email, deleted_at: null },
                         include: {
                             model: role_1.Role,
                             attributes: ['description'],

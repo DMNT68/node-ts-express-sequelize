@@ -12,7 +12,7 @@ export const login = async (req: Request, res: Response) => {
   console.log(email);
   try {
     const usuario = await User.findOne({
-      where: { email: email, deteled_at: null },
+      where: { email: email, deleted_at: null },
       include: {
         model: Role,
         attributes: ['description'],

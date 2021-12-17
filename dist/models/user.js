@@ -17,6 +17,11 @@ var User = connection_1.default.define('users', {
     email: { type: sequelize_1.DataTypes.STRING },
     phone: { type: sequelize_1.DataTypes.STRING },
     birth: { type: sequelize_1.DataTypes.DATE },
+    deleted_at: { type: sequelize_1.DataTypes.DATE, allowNull: true },
+    modified_at: { type: sequelize_1.DataTypes.DATE, allowNull: true },
+    created_by: { type: sequelize_1.DataTypes.NUMBER, allowNull: true },
+    deleted_by: { type: sequelize_1.DataTypes.NUMBER, allowNull: true },
+    modified_by: { type: sequelize_1.DataTypes.NUMBER, allowNull: true },
     idRol: { type: sequelize_1.DataTypes.NUMBER },
     idInstitution: { type: sequelize_1.DataTypes.NUMBER },
     idLocation: { type: sequelize_1.DataTypes.NUMBER },
@@ -40,7 +45,7 @@ email varchar(200)
 phone varchar(10)
 birth date
 created_at timestamp
-deteled_at timestamp
+deleted_at timestamp
 modified_at timestamp
 created_by int
 deleted_by int

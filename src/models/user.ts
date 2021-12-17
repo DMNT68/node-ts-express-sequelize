@@ -13,6 +13,11 @@ const User = db.define('users', {
   email: { type: DataTypes.STRING },
   phone: { type: DataTypes.STRING },
   birth: { type: DataTypes.DATE },
+  deleted_at: { type: DataTypes.DATE, allowNull: true },
+  modified_at: { type: DataTypes.DATE, allowNull: true },
+  created_by: { type: DataTypes.NUMBER, allowNull: true },
+  deleted_by: { type: DataTypes.NUMBER, allowNull: true },
+  modified_by: { type: DataTypes.NUMBER, allowNull: true },
   idRol: { type: DataTypes.NUMBER },
   idInstitution: { type: DataTypes.NUMBER },
   idLocation: { type: DataTypes.NUMBER },
@@ -21,13 +26,13 @@ const User = db.define('users', {
 User.belongsTo(Role, { foreignKey: 'idRol' });
 Role.hasMany(User, { foreignKey: 'idRol' });
 
-User.belongsTo(Institution, {foreignKey:'idInstitution'})
+User.belongsTo(Institution, { foreignKey: 'idInstitution' });
 Institution.hasMany(User, { foreignKey: 'idInstitution' });
 
-User.belongsTo(Institution, {foreignKey:'idInstitution'})
+User.belongsTo(Institution, { foreignKey: 'idInstitution' });
 Institution.hasMany(User, { foreignKey: 'idInstitution' });
 
-User.belongsTo(Location, {foreignKey:'idLocation'})
+User.belongsTo(Location, { foreignKey: 'idLocation' });
 Location.hasMany(User, { foreignKey: 'idLocation' });
 
 export default User;
@@ -41,7 +46,7 @@ email varchar(200)
 phone varchar(10) 
 birth date 
 created_at timestamp 
-deteled_at timestamp 
+deleted_at timestamp 
 modified_at timestamp 
 created_by int 
 deleted_by int 

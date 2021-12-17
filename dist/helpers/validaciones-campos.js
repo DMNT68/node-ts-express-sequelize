@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validarDeleteUsuario = exports.validarLogin = exports.validarUsuarioPut = exports.validarUsuario = void 0;
+exports.validarDeleteUsuario = exports.validarLogin = exports.validarUsuarioPutRol = exports.validarUsuarioPut = exports.validarUsuario = void 0;
 var express_validator_1 = require("express-validator");
 var validar_campos_1 = require("../middlewares/validar-campos");
 var db_validators_1 = require("./db-validators");
@@ -18,8 +18,10 @@ exports.validarUsuario = [
     (0, express_validator_1.check)('lastname', 'El apellido es obligatorio').not().isEmpty(),
     (0, express_validator_1.check)('user_name', 'El nombre de usuario invalido, es muy corto').isLength({ min: 2 }),
     (0, express_validator_1.check)('user_name', 'El nombre de usuario es obligatorio').not().isEmpty(),
+    (0, express_validator_1.check)('user_name').custom(db_validators_1.existeUserName),
     (0, express_validator_1.check)('phone', 'El número celular invalido, ingrese un numero correcto').isLength({ min: 10 }),
     (0, express_validator_1.check)('phone', 'El número celular es obligatorio').not().isEmpty(),
+    (0, express_validator_1.check)('phone').custom(db_validators_1.existePhone),
     (0, express_validator_1.check)('birth', 'La fecha de nacimient invalida, ingrese un fecha correcta').isDate(),
     (0, express_validator_1.check)('birth', 'La fecha de nacimiento es un campo obligatorio').not().isEmpty(),
     (0, express_validator_1.check)('idInstitution', 'La institución no es correcta').isNumeric(),
@@ -45,6 +47,15 @@ exports.validarUsuarioPut = [
     (0, express_validator_1.check)('idInstitution', 'La institución es un campo obligatorio').not().isEmpty(),
     (0, express_validator_1.check)('idLocation', 'La ubicación no es correcta').isNumeric(),
     (0, express_validator_1.check)('idLocation', 'La ubicación es un campo obligatorio').not().isEmpty(),
+    validar_jwt_1.validarJWT,
+    validarAutorizacion_1.validarAutorizacionAdmin,
+    validar_campos_1.validarCampos,
+];
+exports.validarUsuarioPutRol = [
+    (0, express_validator_1.check)('idUser', 'El id usuario es obligatorio').not().isEmpty(),
+    (0, express_validator_1.check)('idUser').custom(function (idUser) { return (0, db_validators_1.existeUsuarioPorId)(idUser); }),
+    (0, express_validator_1.check)('idRol', 'El id usuario es obligatorio').not().isEmpty(),
+    (0, express_validator_1.check)('idRol').custom(function (idRol) { return (0, db_validators_1.esRolValido)(idRol); }),
     validar_jwt_1.validarJWT,
     validarAutorizacion_1.validarAutorizacionAdmin,
     validar_campos_1.validarCampos,

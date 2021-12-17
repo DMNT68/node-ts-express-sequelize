@@ -2,10 +2,9 @@ import { Response, NextFunction, Request } from 'express';
 import User from '../models/user';
 
 export const validarAutorizacionAdmin = async (req: Request, res: Response, next: NextFunction) => {
-    console.log('00=>',req.userId)
   try {
     const user = await User.findOne({
-      where: { users_id: req.userId, deteled_at: null, idRol: 1 },
+      where: { users_id: req.userId, deleted_at: null, idRol: 1 },
     });
 
     if (!user) {

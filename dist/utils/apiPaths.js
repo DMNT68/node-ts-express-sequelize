@@ -5,5 +5,6 @@ exports.apiPaths = {
     usuarios: '/api/usuarios',
     authPath: '/api/auth',
     catalogs: '/api/catalogs',
+    lotaip: '/api/lotaip',
 };
 //# sourceMappingURL=apiPaths.js.map

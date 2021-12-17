@@ -39,13 +39,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUsuario = exports.putUsuario = exports.postUsuario = exports.getUsuario = exports.getUsuarios = exports.getUsuariosActivos = void 0;
+exports.deleteUsuario = exports.putUsuarioRol = exports.putUsuario = exports.postUsuario = exports.getUsuario = exports.getUsuarios = exports.getUsuariosActivos = void 0;
 var connection_1 = __importDefault(require("../db/connection"));
 var encriptarPassword_1 = require("../helpers/encriptarPassword");
 var user_1 = __importDefault(require("../models/user"));
 var role_1 = require("../models/role");
 var institution_1 = require("../models/institution");
 var location_1 = require("../models/location");
+var sequelize_1 = __importDefault(require("sequelize"));
 var getUsuariosActivos = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var usuarios, error_1;
     return __generator(this, function (_a) {
@@ -80,7 +81,7 @@ var getUsuarios = function (req, res) { return __awaiter(void 0, void 0, void 0,
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, user_1.default.findAll({
-                        where: { deteled_at: null },
+                        where: { deleted_at: null },
                         include: [role_1.Role, institution_1.Institution, location_1.Location],
                         attributes: ['users_id', 'user_name', 'name', 'lastname', 'phone', 'email'],
                     })];
@@ -114,7 +115,7 @@ var getUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, 
             case 1:
                 _a.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, user_1.default.findOne({
-                        where: { users_id: id, deteled_at: null },
+                        where: { users_id: id, deleted_at: null },
                         include: [role_1.Role, institution_1.Institution, location_1.Location],
                         attributes: ['users_id', 'user_name', 'name', 'lastname', 'phone', 'email', 'birth'],
                         limit: 1,
@@ -152,7 +153,7 @@ var postUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                usuario = user_1.default.build({ user_name: user_name, password: (0, encriptarPassword_1.encriptarPassword)(password), name: name, lastname: lastname, email: email, phone: phone, birth: birth, idInstitution: idInstitution, idLocation: idLocation });
+                usuario = user_1.default.build({ user_name: user_name, password: (0, encriptarPassword_1.encriptarPassword)(password), name: name, lastname: lastname, email: email, phone: phone, birth: birth, idInstitution: idInstitution, idLocation: idLocation, created_by: req.userId });
                 return [4 /*yield*/, usuario.save()];
             case 2:
                 _b.sent();
@@ -176,12 +177,90 @@ var postUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0,
 }); };
 exports.postUsuario = postUsuario;
 var putUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, body, usuario, error_5;
+    var id, _a, name, lastname, phone, birth, idInstitution, idLocation, usuario, error_5;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                id = req.params.id;
+                _a = req.body, name = _a.name, lastname = _a.lastname, phone = _a.phone, birth = _a.birth, idInstitution = _a.idInstitution, idLocation = _a.idLocation;
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, user_1.default.findByPk(id)];
+            case 2:
+                usuario = _b.sent();
+                if (!usuario) {
+                    return [2 /*return*/, res.status(400).json({
+                            ok: false,
+                            msg: "No existe un usuarios con el id " + id,
+                        })];
+                }
+                return [4 /*yield*/, usuario.update({ name: name, lastname: lastname, phone: phone, birth: birth, idInstitution: idInstitution, idLocation: idLocation, modified_at: sequelize_1.default.fn('NOW'), modified_by: req.userId })];
+            case 3:
+                _b.sent();
+                res.status(200).json({
+                    ok: true,
+                    msg: 'usuario modificado',
+                });
+                return [3 /*break*/, 5];
+            case 4:
+                error_5 = _b.sent();
+                res.status(500).json({
+                    ok: false,
+                    msg: "Ha ocurrido un error vuelva a intentarlo",
+                });
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.putUsuario = putUsuario;
+var putUsuarioRol = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, idUser, idRol, usuario, error_6;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, idUser = _a.idUser, idRol = _a.idRol;
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, user_1.default.findByPk(idUser)];
+            case 2:
+                usuario = _b.sent();
+                if (!usuario) {
+                    return [2 /*return*/, res.status(400).json({
+                            ok: false,
+                            msg: "No existe un usuarios con el id " + idUser,
+                        })];
+                }
+                return [4 /*yield*/, usuario.update({ idRol: idRol, modified_at: sequelize_1.default.fn('NOW'), modified_by: req.userId })];
+            case 3:
+                _b.sent();
+                res.status(200).json({
+                    ok: true,
+                    msg: 'Rol modificado',
+                    // usuario,
+                });
+                return [3 /*break*/, 5];
+            case 4:
+                error_6 = _b.sent();
+                res.status(500).json({
+                    ok: false,
+                    msg: "Ha ocurrido un error vuelva a intentarlo",
+                });
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.putUsuarioRol = putUsuarioRol;
+var deleteUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, usuario, resp, error_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 id = req.params.id;
-                body = req.body;
+                console.log(id);
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, , 5]);
@@ -194,17 +273,23 @@ var putUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                             msg: "No existe un usuarios con el id " + id,
                         })];
                 }
-                return [4 /*yield*/, usuario.update(body)];
+                if (usuario.getDataValue('users_id') === req.userId) {
+                    return [2 /*return*/, res.status(400).json({
+                            ok: false,
+                            msg: "El usuario no puede eliminarse a si mismo",
+                        })];
+                }
+                return [4 /*yield*/, connection_1.default.query('CALL deleteUser(:idUser, :deletedBy)', { replacements: { idUser: usuario.getDataValue('users_id'), deletedBy: req.userId } })];
             case 3:
-                _a.sent();
+                resp = _a.sent();
                 res.status(200).json({
                     ok: true,
-                    msg: 'usuario modificado',
-                    usuario: usuario,
+                    msg: 'usuario borrado',
+                    resp: resp,
                 });
                 return [3 /*break*/, 5];
             case 4:
-                error_5 = _a.sent();
+                error_7 = _a.sent();
                 res.status(500).json({
                     ok: false,
                     msg: "Ha ocurrido un error vuelva a intentarlo",
@@ -212,30 +297,6 @@ var putUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
-    });
-}); };
-exports.putUsuario = putUsuario;
-var deleteUsuario = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id;
-    return __generator(this, function (_a) {
-        id = req.params.id;
-        console.log(id);
-        try {
-            // const usuario = await User.findByPk( id );
-            // await usuario.update({ estado: false });
-            res.status(200).json({
-                ok: true,
-                msg: 'usuario borrado',
-                // usuario,
-            });
-        }
-        catch (error) {
-            res.status(500).json({
-                ok: false,
-                msg: "Ha ocurrido un error vuelva a intentarlo",
-            });
-        }
-        return [2 /*return*/];
     });
 }); };
 exports.deleteUsuario = deleteUsuario;

@@ -35,41 +35,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validarAutorizacionAdmin = void 0;
-var user_1 = __importDefault(require("../models/user"));
-var validarAutorizacionAdmin = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, error_1;
+exports.insertLotaip = exports.getLotaip = void 0;
+var getLotaip = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_1.default.findOne({
-                        where: { users_id: req.userId, deleted_at: null, idRol: 1 },
-                    })];
-            case 1:
-                user = _a.sent();
-                if (!user) {
-                    res.status(401).json({
-                        ok: false,
-                        msg: 'Acceso denegado, El usuario no tiene permisos para hacer esta acción',
-                    });
-                }
-                next();
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _a.sent();
-                res.status(401).json({
-                    ok: false,
-                    msg: 'Acceso denegado, El usuario no tiene permisos para hacer esta accion',
-                });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+        try {
+            res.status(200).json({
+                ok: true,
+            });
         }
+        catch (error) {
+            console.log('---->', error);
+            res.status(500).json({
+                ok: false,
+                msg: "Ha ocurrido un error vuelva a intentarlo",
+            });
+        }
+        return [2 /*return*/];
     });
 }); };
-exports.validarAutorizacionAdmin = validarAutorizacionAdmin;
-//# sourceMappingURL=validarAutorizacion.js.map
+exports.getLotaip = getLotaip;
+var insertLotaip = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        console.log('id-->', req.userId);
+        console.log('body-->', req.body);
+        try {
+            res.status(200).json({
+                ok: true,
+            });
+        }
+        catch (error) {
+            console.log('---->', error);
+            res.status(500).json({
+                ok: false,
+                msg: "Ha ocurrido un error vuelva a intentarlo",
+            });
+        }
+        return [2 /*return*/];
+    });
+}); };
+exports.insertLotaip = insertLotaip;
+//# sourceMappingURL=lotaip.js.map

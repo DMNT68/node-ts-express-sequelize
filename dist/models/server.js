@@ -46,6 +46,7 @@ var cors_1 = __importDefault(require("cors"));
 var usuario_1 = __importDefault(require("../routes/usuario"));
 var auth_1 = __importDefault(require("../routes/auth"));
 var catalogs_1 = __importDefault(require("../routes/catalogs"));
+var lotaip_1 = __importDefault(require("../routes/lotaip"));
 var connection_1 = __importDefault(require("../db/connection"));
 var apiPaths_1 = require("../utils/apiPaths");
 var Server = /** @class */ (function () {
@@ -91,6 +92,7 @@ var Server = /** @class */ (function () {
         this.app.use(this.apiPaths.usuarios, usuario_1.default);
         this.app.use(this.apiPaths.authPath, auth_1.default);
         this.app.use(this.apiPaths.catalogs, catalogs_1.default);
+        this.app.use(this.apiPaths.lotaip, lotaip_1.default);
     };
     Server.prototype.listen = function () {
         var _this = this;

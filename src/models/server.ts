@@ -6,6 +6,7 @@ import cors from 'cors';
 import userRoutes from '../routes/usuario';
 import authRoutes from '../routes/auth';
 import catalogsRoutes from '../routes/catalogs';
+import lotaipRoutes from '../routes/lotaip';
 import db from '../db/connection';
 import { apiPaths } from '../utils/apiPaths';
 
@@ -50,6 +51,7 @@ class Server {
     this.app.use(this.apiPaths.usuarios, userRoutes);
     this.app.use(this.apiPaths.authPath, authRoutes);
     this.app.use(this.apiPaths.catalogs, catalogsRoutes);
+    this.app.use(this.apiPaths.lotaip, lotaipRoutes);
   }
 
   listen() {
