@@ -35,8 +35,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.insertLotaip = exports.getLotaip = void 0;
+var user_1 = __importDefault(require("../models/user"));
+var institution_1 = require("../models/institution");
+var lotaip_1 = require("../models/lotaip");
+var detailLotaip_1 = require("../models/detailLotaip");
+var documentLotaip_1 = require("../models/documentLotaip");
 var getLotaip = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         try {
@@ -56,22 +64,101 @@ var getLotaip = function (req, res) { return __awaiter(void 0, void 0, void 0, f
 }); };
 exports.getLotaip = getLotaip;
 var insertLotaip = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        console.log('id-->', req.userId);
-        console.log('body-->', req.body);
-        try {
-            res.status(200).json({
-                ok: true,
-            });
+    var _a, year, month, detailLotaip, idInstitution, insti, validacion, lotaip_2, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, year = _a.year, month = _a.month, detailLotaip = _a.detailLotaip;
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 7, , 8]);
+                return [4 /*yield*/, user_1.default.findOne({ where: { users_id: req.userId, deleted_at: null }, attributes: ['idInstitution'] })];
+            case 2:
+                idInstitution = _b.sent();
+                if (!idInstitution) {
+                    return [2 /*return*/, res.status(404).json({
+                            ok: false,
+                            msg: 'No se pudo encontrar la institución a la que pertenece el usuario',
+                        })];
+                }
+                return [4 /*yield*/, institution_1.Institution.findOne({ where: { institution_id: idInstitution.getDataValue('idInstitution'), deleted_at: null }, attributes: ['institution_id'] })];
+            case 3:
+                insti = _b.sent();
+                if (!insti) {
+                    return [2 /*return*/, res.status(404).json({
+                            ok: false,
+                            msg: 'La institucion no existe',
+                        })];
+                }
+                return [4 /*yield*/, lotaip_1.Lotaip.findOne({ where: { year: year, month: month, deleted_at: null }, attributes: ['lotaip_id'] })];
+            case 4:
+                validacion = _b.sent();
+                if (validacion) {
+                    return [2 /*return*/, res.status(404).json({
+                            ok: false,
+                            msg: 'No pude repetir el mismo mes',
+                        })];
+                }
+                return [4 /*yield*/, lotaip_1.Lotaip.create({ year: year, month: month, idInstitution: insti.getDataValue('institution_id') })];
+            case 5:
+                lotaip_2 = _b.sent();
+                // await lotaip.save();
+                console.log(lotaip_2);
+                console.log('-->', lotaip_2.get({ plain: true }));
+                return [4 /*yield*/, Promise.all(detailLotaip.map(function (item) { return __awaiter(void 0, void 0, void 0, function () {
+                        var dtLotaip;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, detailLotaip_1.DetailLotaip.build({ idLotaip: lotaip_2.getDataValue('lotaip_id'), idCatalogLotaip: item.idCatalogLotaip })];
+                                case 1:
+                                    dtLotaip = _a.sent();
+                                    return [4 /*yield*/, dtLotaip.save()];
+                                case 2:
+                                    _a.sent();
+                                    return [4 /*yield*/, Promise.all(item.documentsDetail.map(function (doc) { return __awaiter(void 0, void 0, void 0, function () {
+                                            var docDet;
+                                            return __generator(this, function (_a) {
+                                                switch (_a.label) {
+                                                    case 0: return [4 /*yield*/, documentLotaip_1.DocumentLotaip.build({
+                                                            title: doc.title,
+                                                            url: doc.url,
+                                                            file_name: doc.fileName,
+                                                            extention: doc.ext,
+                                                            idCatalogLiteral: item.idCatalogLotaip,
+                                                            idDetailLotaip: dtLotaip.getDataValue('detailLotaip_id'),
+                                                        })];
+                                                    case 1:
+                                                        docDet = _a.sent();
+                                                        return [4 /*yield*/, docDet.save()];
+                                                    case 2:
+                                                        _a.sent();
+                                                        return [2 /*return*/];
+                                                }
+                                            });
+                                        }); }))];
+                                case 3:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }))];
+            case 6:
+                _b.sent();
+                res.status(200).json({
+                    ok: true,
+                    msg: 'Se guardo exitosamente',
+                });
+                return [3 /*break*/, 8];
+            case 7:
+                error_1 = _b.sent();
+                console.log('---->', error_1);
+                res.status(500).json({
+                    ok: false,
+                    msg: "Ha ocurrido un error vuelva a intentarlo",
+                });
+                return [3 /*break*/, 8];
+            case 8: return [2 /*return*/];
         }
-        catch (error) {
-            console.log('---->', error);
-            res.status(500).json({
-                ok: false,
-                msg: "Ha ocurrido un error vuelva a intentarlo",
-            });
-        }
-        return [2 /*return*/];
     });
 }); };
 exports.insertLotaip = insertLotaip;

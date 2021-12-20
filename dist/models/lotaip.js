@@ -8,7 +8,7 @@ var sequelize_1 = require("sequelize");
 var connection_1 = __importDefault(require("../db/connection"));
 var institution_1 = require("./institution");
 exports.Lotaip = connection_1.default.define('lotaip', {
-    lotaip_id: { type: sequelize_1.DataTypes.NUMBER, primaryKey: true },
+    lotaip_id: { type: sequelize_1.DataTypes.NUMBER, primaryKey: true, autoIncrement: true },
     year: { type: sequelize_1.DataTypes.NUMBER },
     month: { type: sequelize_1.DataTypes.NUMBER },
     idInstitution: { type: sequelize_1.DataTypes.NUMBER },

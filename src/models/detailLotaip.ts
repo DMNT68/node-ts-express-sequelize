@@ -6,7 +6,7 @@ import { CatalogLotaip } from './catalogLotaip';
 export const DetailLotaip = db.define(
   'detail_lotaip',
   {
-    detailLotaip_id: { type: DataTypes.NUMBER, primaryKey: true },
+    detailLotaip_id: { type: DataTypes.NUMBER, primaryKey: true, autoIncrement: true },
     idLotaip: { type: DataTypes.NUMBER },
     idCatalogLotaip: { type: DataTypes.NUMBER },
   },

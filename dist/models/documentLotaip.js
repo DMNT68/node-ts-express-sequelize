@@ -9,7 +9,7 @@ var connection_1 = __importDefault(require("../db/connection"));
 var catalogLiteral_1 = require("./catalogLiteral");
 var detailLotaip_1 = require("./detailLotaip");
 exports.DocumentLotaip = connection_1.default.define('documents_detail', {
-    document_id: { type: sequelize_1.DataTypes.NUMBER, primaryKey: true },
+    document_id: { type: sequelize_1.DataTypes.NUMBER, primaryKey: true, autoIncrement: true },
     title: { type: sequelize_1.DataTypes.STRING },
     url: { type: sequelize_1.DataTypes.STRING },
     file_name: { type: sequelize_1.DataTypes.STRING },

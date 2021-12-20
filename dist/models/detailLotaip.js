@@ -9,7 +9,7 @@ var connection_1 = __importDefault(require("../db/connection"));
 var lotaip_1 = require("./lotaip");
 var catalogLotaip_1 = require("./catalogLotaip");
 exports.DetailLotaip = connection_1.default.define('detail_lotaip', {
-    detailLotaip_id: { type: sequelize_1.DataTypes.NUMBER, primaryKey: true },
+    detailLotaip_id: { type: sequelize_1.DataTypes.NUMBER, primaryKey: true, autoIncrement: true },
     idLotaip: { type: sequelize_1.DataTypes.NUMBER },
     idCatalogLotaip: { type: sequelize_1.DataTypes.NUMBER },
 }, { freezeTableName: true });

@@ -5,7 +5,7 @@ import { Institution } from './institution';
 export const Lotaip = db.define(
   'lotaip',
   {
-    lotaip_id: { type: DataTypes.NUMBER, primaryKey: true },
+    lotaip_id: { type: DataTypes.NUMBER, primaryKey: true, autoIncrement: true },
     year: { type: DataTypes.NUMBER },
     month: { type: DataTypes.NUMBER },
     idInstitution: { type: DataTypes.NUMBER },

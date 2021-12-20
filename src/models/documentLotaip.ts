@@ -6,7 +6,7 @@ import { DetailLotaip } from './detailLotaip';
 export const DocumentLotaip = db.define(
   'documents_detail',
   {
-    document_id: { type: DataTypes.NUMBER, primaryKey: true },
+    document_id: { type: DataTypes.NUMBER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING },
     url: { type: DataTypes.STRING },
     file_name: { type: DataTypes.STRING },
