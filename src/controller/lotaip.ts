@@ -6,11 +6,53 @@ import { Lotaip } from '../models/lotaip';
 import { LotaipInterface } from '../interfaces/Ilotaitp';
 import { DetailLotaip } from '../models/detailLotaip';
 import { DocumentLotaip } from '../models/documentLotaip';
+import { IDetailLotaip } from '../interfaces/IDetailLotaip';
 
 export const getLotaip = async (req: Request, res: Response) => {
   try {
+    const idInstitution = await User.findOne({ where: { users_id: req.userId, deleted_at: null }, attributes: ['idInstitution'] });
+
+    if (!idInstitution) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'No se pudo encontrar la institución a la que pertenece el usuario',
+      });
+    }
+
+    const insti = await Institution.findOne({ where: { institution_id: idInstitution.getDataValue('idInstitution'), deleted_at: null }, attributes: ['institution_id'] });
+
+    if (!insti) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'La institucion no existe',
+      });
+    }
+
+    const lotaipAll = await Lotaip.findAll({ where: { idInstitution: insti.getDataValue('institution_id'), deleted_at: null } });
+
+    const data = await Promise.all(
+      lotaipAll.map(async (item) => {
+        const det = await DetailLotaip.findAll({ where: { deleted_at: null, idLotaip: item.getDataValue('lotaip_id') }, attributes: ['detailLotaip_id', 'idCatalogLotaip'] });
+
+        const detail = await Promise.all(
+          det.map(async (dt) => {
+            const docs = await DocumentLotaip.findAll({
+              raw: true,
+              where: { deleted_at: null, idDetailLotaip: dt.getDataValue('detailLotaip_id'), idCatalogLiteral: dt.getDataValue('idCatalogLotaip') },
+              attributes: ['document_id', 'title', 'url', 'file_name', 'extention', 'idDetailLotaip'],
+            });
+
+            return { ...dt.get({ plain: true }), docs };
+          })
+        );
+
+        return { ...item.get({ plain: true }), detail };
+      })
+    );
+
     res.status(200).json({
       ok: true,
+      data,
     });
   } catch (error) {
     console.log('---->', error);
@@ -53,14 +95,10 @@ export const insertLotaip = async (req: Request, res: Response) => {
     }
     const lotaip = await Lotaip.create({ year, month, idInstitution: insti.getDataValue('institution_id') });
 
-    // await lotaip.save();
-
-    console.log(lotaip);
-    console.log('-->', lotaip.get({ plain: true }));
-
     await Promise.all(
       detailLotaip.map(async (item) => {
         const dtLotaip = await DetailLotaip.build({ idLotaip: lotaip.getDataValue('lotaip_id'), idCatalogLotaip: item.idCatalogLotaip });
+
         await dtLotaip.save();
 
         await Promise.all(
@@ -73,6 +111,7 @@ export const insertLotaip = async (req: Request, res: Response) => {
               idCatalogLiteral: item.idCatalogLotaip,
               idDetailLotaip: dtLotaip.getDataValue('detailLotaip_id'),
             });
+
             await docDet.save();
           })
         );
