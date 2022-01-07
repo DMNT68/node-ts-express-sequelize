@@ -17,5 +17,4 @@ export interface DocumentsDetail {
     fileName:         string;
     ext:              string;
     idCatalogLiteral: number;
-    idDetailLotaip:   number;
 }

@@ -158,7 +158,7 @@ var insertLotaip = function (req, res) { return __awaiter(void 0, void 0, void 0
                             msg: 'La institucion no existe',
                         })];
                 }
-                return [4 /*yield*/, lotaip_1.Lotaip.findOne({ where: { year: year, month: month, deleted_at: null }, attributes: ['lotaip_id'] })];
+                return [4 /*yield*/, lotaip_1.Lotaip.findOne({ where: { year: year, month: month, deleted_at: null, idInstitution: insti.getDataValue('institution_id') }, attributes: ['lotaip_id'] })];
             case 4:
                 validacion = _b.sent();
                 if (validacion) {

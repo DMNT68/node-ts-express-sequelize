@@ -85,7 +85,7 @@ export const insertLotaip = async (req: Request, res: Response) => {
       });
     }
 
-    const validacion = await Lotaip.findOne({ where: { year, month, deleted_at: null }, attributes: ['lotaip_id'] });
+    const validacion = await Lotaip.findOne({ where: { year, month, deleted_at: null, idInstitution: insti.getDataValue('institution_id') }, attributes: ['lotaip_id'] });
 
     if (validacion) {
       return res.status(404).json({
@@ -93,6 +93,7 @@ export const insertLotaip = async (req: Request, res: Response) => {
         msg: 'No pude repetir el mismo mes',
       });
     }
+    
     const lotaip = await Lotaip.create({ year, month, idInstitution: insti.getDataValue('institution_id') });
 
     await Promise.all(
